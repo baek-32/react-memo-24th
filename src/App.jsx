@@ -116,7 +116,7 @@ function App() {
           />
 
           {!hasMemos ? (
-            <EmptyState />
+            <EmptyState onAddMemo={() => setIsAddingMemo(true)} />
           ) : hasVisibleMemos ? (
             <MemoList
               memos={visibleMemos}
