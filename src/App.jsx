@@ -6,10 +6,9 @@ import MemoDetail from "./components/MemoDetail.jsx";
 import MemoEditor from "./components/MemoEditor.jsx";
 import MemoList from "./components/MemoList.jsx";
 import NoResultsState from "./components/NoResultsState.jsx";
-import initialMemos from "./data/initialMemos.js";
 
 function App() {
-  const [memos, setMemos] = useState(initialMemos);
+  const [memos, setMemos] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
   const [selectedMemo, setSelectedMemo] = useState(null);
