@@ -9,6 +9,10 @@ https://react-memo-24th-three.vercel.app
 ## 주요 기능
 
 - 메모 목록 조회
+- 메모 작성, 수정 및 삭제
+- 메모 작성 완료 팝업
+- 메모 작성 취소 및 뒤로가기 확인 팝업
+- 삭제 확인 팝업
 - 고정 메모와 일반 메모 분리
 - 메모 고정 및 고정 해제
 - 카테고리별 메모 필터링
@@ -34,17 +38,20 @@ https://react-memo-24th-three.vercel.app
 src
 ├── assets
 ├── components
+│   ├── CommonModal.jsx
 │   ├── EmptyState.jsx
 │   ├── Header.jsx
 │   ├── IconButton.jsx
+│   ├── MemoCategorySelect.jsx
 │   ├── MemoDetail.jsx
+│   ├── MemoEditor.jsx
 │   ├── MemoItem.jsx
 │   ├── MemoList.jsx
 │   ├── NoResultsState.jsx
 │   ├── SearchBar.jsx
 │   └── TagFilter.jsx
 ├── constants
-├── data
+│   └── categoryStyles.js
 ├── App.jsx
 ├── index.css
 └── main.jsx
