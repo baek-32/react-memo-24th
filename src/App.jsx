@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CommonModal from "./components/CommonModal.jsx";
 import EmptyState from "./components/EmptyState.jsx";
 import Header from "./components/Header.jsx";
 import MemoDetail from "./components/MemoDetail.jsx";
@@ -14,6 +15,7 @@ function App() {
   const [selectedMemo, setSelectedMemo] = useState(null);
   const [isAddingMemo, setIsAddingMemo] = useState(false);
   const [editingMemo, setEditingMemo] = useState(null);
+  const [isAddCompleteModalOpen, setIsAddCompleteModalOpen] = useState(false);
 
   const hasMemos = memos.length > 0;
   const keyword = searchText.trim().toLowerCase();
@@ -66,6 +68,12 @@ function App() {
       { ...memoDraft, id: nextId, isPinned: false },
       ...currentMemos,
     ]);
+
+    setIsAddCompleteModalOpen(true);
+  };
+
+  const handleCloseAddCompleteModal = () => {
+    setIsAddCompleteModalOpen(false);
     setIsAddingMemo(false);
   };
 
@@ -80,7 +88,16 @@ function App() {
         memo.id === editingMemo.id ? { ...memo, ...memoDraft } : memo,
       ),
     );
+
     setEditingMemo(null);
+  };
+
+  const handleDeleteMemo = (memoId) => {
+    setMemos((currentMemos) =>
+      currentMemos.filter((memo) => memo.id !== memoId),
+    );
+
+    setSelectedMemo(null);
   };
 
   return (
@@ -118,6 +135,7 @@ function App() {
           memo={selectedMemo}
           onClose={handleCloseMemo}
           onEdit={handleStartEdit}
+          onDelete={handleDeleteMemo}
         />
       )}
 
@@ -133,6 +151,14 @@ function App() {
           initialMemo={editingMemo}
           onCancel={() => setEditingMemo(null)}
           onSubmit={handleUpdateMemo}
+        />
+      )}
+
+      {isAddCompleteModalOpen && (
+        <CommonModal
+          title="작성이 완료되었습니다"
+          message="메인 화면에서 작성한 메모를 확인할 수 있어요."
+          onConfirm={handleCloseAddCompleteModal}
         />
       )}
     </>
