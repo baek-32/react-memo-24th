@@ -5,7 +5,7 @@ import editIcon from "../assets/edit.svg";
 import CATEGORY_STYLES from "../constants/categoryStyles.js";
 import IconButton from "./IconButton.jsx";
 
-function MemoDetail({ memo, onClose }) {
+function MemoDetail({ memo, onClose, onEdit }) {
   const categoryStyle =
     CATEGORY_STYLES[memo.category] ?? CATEGORY_STYLES.Others;
 
@@ -90,6 +90,7 @@ function MemoDetail({ memo, onClose }) {
         <footer className="flex justify-end gap-3">
           <IconButton
             icon={editIcon}
+            onClick={() => onEdit(memo)}
             label="메모 수정"
             className="h-8 w-8 focus-visible:outline-white-00 [&_img]:h-6 [&_img]:w-6"
           />

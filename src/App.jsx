@@ -13,6 +13,7 @@ function App() {
   const [searchText, setSearchText] = useState("");
   const [selectedMemo, setSelectedMemo] = useState(null);
   const [isAddingMemo, setIsAddingMemo] = useState(false);
+  const [editingMemo, setEditingMemo] = useState(null);
 
   const hasMemos = memos.length > 0;
   const keyword = searchText.trim().toLowerCase();
@@ -68,6 +69,20 @@ function App() {
     setIsAddingMemo(false);
   };
 
+  const handleStartEdit = (memo) => {
+    setSelectedMemo(null);
+    setEditingMemo(memo);
+  };
+
+  const handleUpdateMemo = (memoDraft) => {
+    setMemos((currentMemos) =>
+      currentMemos.map((memo) =>
+        memo.id === editingMemo.id ? { ...memo, ...memoDraft } : memo,
+      ),
+    );
+    setEditingMemo(null);
+  };
+
   return (
     <>
       <main className="min-h-screen bg-blue-01 px-6 py-18 font-sans">
@@ -99,13 +114,25 @@ function App() {
       </main>
 
       {selectedMemo && (
-        <MemoDetail memo={selectedMemo} onClose={handleCloseMemo} />
+        <MemoDetail
+          memo={selectedMemo}
+          onClose={handleCloseMemo}
+          onEdit={handleStartEdit}
+        />
       )}
 
       {isAddingMemo && (
         <MemoEditor
           onCancel={() => setIsAddingMemo(false)}
           onSubmit={handleAddMemo}
+        />
+      )}
+
+      {editingMemo && (
+        <MemoEditor
+          initialMemo={editingMemo}
+          onCancel={() => setEditingMemo(null)}
+          onSubmit={handleUpdateMemo}
         />
       )}
     </>
