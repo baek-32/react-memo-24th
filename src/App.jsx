@@ -2,6 +2,7 @@ import { useState } from "react";
 import EmptyState from "./components/EmptyState.jsx";
 import Header from "./components/Header.jsx";
 import MemoDetail from "./components/MemoDetail.jsx";
+import MemoEditor from "./components/MemoEditor.jsx";
 import MemoList from "./components/MemoList.jsx";
 import NoResultsState from "./components/NoResultsState.jsx";
 import initialMemos from "./data/initialMemos.js";
@@ -11,6 +12,7 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
   const [selectedMemo, setSelectedMemo] = useState(null);
+  const [isAddingMemo, setIsAddingMemo] = useState(false);
 
   const hasMemos = memos.length > 0;
   const keyword = searchText.trim().toLowerCase();
@@ -52,6 +54,20 @@ function App() {
     setSelectedMemo(null);
   };
 
+  const handleAddMemo = (memoDraft) => {
+    const nextId =
+      memos.reduce(
+        (largestId, memo) => Math.max(largestId, Number(memo.id)),
+        0,
+      ) + 1;
+
+    setMemos((currentMemos) => [
+      { ...memoDraft, id: nextId, isPinned: false },
+      ...currentMemos,
+    ]);
+    setIsAddingMemo(false);
+  };
+
   return (
     <>
       <main className="min-h-screen bg-blue-01 px-6 py-18 font-sans">
@@ -65,6 +81,7 @@ function App() {
             onSelectCategory={handleSelectCategory}
             searchText={searchText}
             onSearchTextChange={handleSearchTextChange}
+            onAddMemo={() => setIsAddingMemo(true)}
           />
 
           {!hasMemos ? (
@@ -83,6 +100,13 @@ function App() {
 
       {selectedMemo && (
         <MemoDetail memo={selectedMemo} onClose={handleCloseMemo} />
+      )}
+
+      {isAddingMemo && (
+        <MemoEditor
+          onCancel={() => setIsAddingMemo(false)}
+          onSubmit={handleAddMemo}
+        />
       )}
     </>
   );

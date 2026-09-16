@@ -8,6 +8,7 @@ function Header({
   onSelectCategory,
   searchText,
   onSearchTextChange,
+  onAddMemo,
 }) {
   return (
     <header className="flex w-full items-center gap-4">
@@ -21,6 +22,7 @@ function Header({
       <div className="flex shrink-0 gap-4">
         <IconButton
           icon={addIcon}
+          onClick={onAddMemo}
           label="메모 추가"
           className="h-20 w-20 bg-white-00 hover:bg-blue-01 [&_img]:h-6 [&_img]:w-6"
         />
