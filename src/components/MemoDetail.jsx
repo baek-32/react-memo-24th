@@ -98,7 +98,7 @@ function MemoDetail({ memo, onClose, onEdit, onDelete }) {
               </div>
             </div>
 
-            <p className="text-body-large font-medium text-white-00">
+            <p className="whitespace-pre-wrap text-body-large font-medium text-white-00">
               {memo.content}
             </p>
           </div>
@@ -124,7 +124,7 @@ function MemoDetail({ memo, onClose, onEdit, onDelete }) {
       {isDeleteModalOpen && (
         <CommonModal
           title="메모를 삭제 하시겠습니까?"
-          message="삭제된 메모는 휴지통에서 확인 가능합니다."
+          message="삭제한 메모는 복구할 수 없습니다."
           confirmText="삭제"
           cancelText="취소"
           onConfirm={handleDeleteMemo}

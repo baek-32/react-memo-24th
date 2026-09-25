@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommonModal from "./components/CommonModal.jsx";
 import EmptyState from "./components/EmptyState.jsx";
 import Header from "./components/Header.jsx";
@@ -7,14 +7,31 @@ import MemoEditor from "./components/MemoEditor.jsx";
 import MemoList from "./components/MemoList.jsx";
 import NoResultsState from "./components/NoResultsState.jsx";
 
+const MEMOS_STORAGE_KEY = "memos";
+
+const loadMemos = () => {
+  try {
+    const savedMemos = localStorage.getItem(MEMOS_STORAGE_KEY);
+
+    return savedMemos ? JSON.parse(savedMemos) : [];
+  } catch {
+    localStorage.removeItem(MEMOS_STORAGE_KEY);
+    return [];
+  }
+};
+
 function App() {
-  const [memos, setMemos] = useState([]);
+  const [memos, setMemos] = useState(loadMemos);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
   const [selectedMemo, setSelectedMemo] = useState(null);
   const [isAddingMemo, setIsAddingMemo] = useState(false);
   const [editingMemo, setEditingMemo] = useState(null);
   const [isAddCompleteModalOpen, setIsAddCompleteModalOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(MEMOS_STORAGE_KEY, JSON.stringify(memos));
+  }, [memos]);
 
   const hasMemos = memos.length > 0;
   const keyword = searchText.trim().toLowerCase();
@@ -68,12 +85,12 @@ function App() {
       ...currentMemos,
     ]);
 
+    setIsAddingMemo(false);
     setIsAddCompleteModalOpen(true);
   };
 
   const handleCloseAddCompleteModal = () => {
     setIsAddCompleteModalOpen(false);
-    setIsAddingMemo(false);
   };
 
   const handleStartEdit = (memo) => {

@@ -61,7 +61,7 @@ function TagFilter({ selectedCategory, onSelectCategory }) {
 
       {isOpen && (
         <div
-          className="absolute top-17 left-1 z-10 flex h-41 w-35 flex-col justify-between rounded-[28px] bg-blue-01 px-6 py-4"
+          className="absolute top-17 left-1 z-10 flex h-41 w-35 flex-col justify-between rounded-[28px] bg-white-00 px-6 py-4 shadow-md"
           role="listbox"
           aria-label="메모 카테고리"
         >

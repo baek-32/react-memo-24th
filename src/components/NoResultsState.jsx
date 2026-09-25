@@ -7,7 +7,7 @@ function NoResultsState() {
         <img className="h-9.75 w-9.75" src={searchEmptyIcon} alt="" />
       </div>
 
-      <div className="flex w-62 flex-col items-center gap-2 text-center">
+      <div className="flex w-80 flex-col items-center gap-2 text-center">
         <p className="text-body-small font-regular text-blue-07">
           검색 결과가 없습니다
         </p>
