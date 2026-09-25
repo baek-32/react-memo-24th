@@ -1,4 +1,14 @@
 import { useEffect, useRef } from "react";
+import type { MouseEvent, SyntheticEvent } from "react";
+
+interface CommonModalProps {
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+  onConfirm: () => void;
+  onCancel?: () => void;
+}
 
 function CommonModal({
   title,
@@ -7,8 +17,8 @@ function CommonModal({
   cancelText = "취소",
   onConfirm,
   onCancel,
-}) {
-  const dialogRef = useRef(null);
+}: CommonModalProps) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -26,7 +36,7 @@ function CommonModal({
     };
   }, []);
 
-  const handleCancel = (event) => {
+  const handleCancel = (event: SyntheticEvent<HTMLDialogElement>) => {
     event.preventDefault();
 
     if (onCancel) {
@@ -34,7 +44,7 @@ function CommonModal({
     }
   };
 
-  const handleBackdropClick = (event) => {
+  const handleBackdropClick = (event: MouseEvent<HTMLDialogElement>) => {
     if (event.target === event.currentTarget && onCancel) {
       onCancel();
     }

@@ -1,7 +1,11 @@
 import addMemoIcon from "../assets/add-memo.svg";
-import IconButton from "./IconButton.jsx";
+import IconButton from "./IconButton";
 
-function EmptyState({ onAddMemo }) {
+interface EmptyStateProps {
+  onAddMemo: () => void;
+}
+
+function EmptyState({ onAddMemo }: EmptyStateProps) {
   return (
     <section className="flex h-177.5 w-full flex-col items-center justify-center gap-2.5 rounded-3xl border-2 border-dashed border-blue-02">
       <IconButton

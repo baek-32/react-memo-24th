@@ -1,10 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import tagArrowIcon from "../assets/tag-arrow.svg";
-import CATEGORY_STYLES, { CATEGORIES } from "../constants/categoryStyles.js";
 
-function TagFilter({ selectedCategory, onSelectCategory }) {
+import tagArrowIcon from "../assets/tag-arrow.svg";
+import CATEGORY_STYLES, {
+  CATEGORIES,
+  type FilterCategory,
+} from "../constants/categoryStyles";
+
+interface TagFilterProps {
+  selectedCategory: FilterCategory;
+  onSelectCategory: (category: FilterCategory) => void;
+}
+
+function TagFilter({ selectedCategory, onSelectCategory }: TagFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const filterRef = useRef(null);
+  const filterRef = useRef<HTMLDivElement>(null);
   const selectedStyle = CATEGORY_STYLES[selectedCategory];
 
   useEffect(() => {
@@ -12,13 +21,17 @@ function TagFilter({ selectedCategory, onSelectCategory }) {
       return undefined;
     }
 
-    const handleOutsideClick = (event) => {
-      if (filterRef.current && !filterRef.current.contains(event.target)) {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        event.target instanceof Node &&
+        filterRef.current &&
+        !filterRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
 
-    const handleEscapeKey = (event) => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
       }
@@ -33,7 +46,7 @@ function TagFilter({ selectedCategory, onSelectCategory }) {
     };
   }, [isOpen]);
 
-  const handleSelect = (category) => {
+  const handleSelect = (category: FilterCategory) => {
     onSelectCategory(category);
     setIsOpen(false);
   };

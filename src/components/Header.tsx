@@ -1,7 +1,16 @@
 import addIcon from "../assets/add.svg";
 import profileIcon from "../assets/profile.svg";
-import IconButton from "./IconButton.jsx";
-import SearchBar from "./SearchBar.jsx";
+import type { FilterCategory } from "../constants/categoryStyles";
+import IconButton from "./IconButton";
+import SearchBar from "./SearchBar";
+
+interface HeaderProps {
+  selectedCategory: FilterCategory;
+  onSelectCategory: (category: FilterCategory) => void;
+  searchText: string;
+  onSearchTextChange: (searchText: string) => void;
+  onAddMemo: () => void;
+}
 
 function Header({
   selectedCategory,
@@ -9,7 +18,7 @@ function Header({
   searchText,
   onSearchTextChange,
   onAddMemo,
-}) {
+}: HeaderProps) {
   return (
     <header className="flex w-full items-center gap-4">
       <SearchBar

@@ -1,4 +1,20 @@
-function IconButton({ icon, label, type = "button", className = "", onClick }) {
+import type { MouseEventHandler } from "react";
+
+interface IconButtonProps {
+  icon: string;
+  label: string;
+  type?: "button" | "submit" | "reset";
+  className?: string;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
+}
+
+function IconButton({
+  icon,
+  label,
+  type = "button",
+  className = "",
+  onClick,
+}: IconButtonProps) {
   return (
     <button
       type={type}

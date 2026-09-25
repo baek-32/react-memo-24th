@@ -1,6 +1,13 @@
-import MemoItem from "./MemoItem.jsx";
+import type { Memo } from "../types/memo";
+import MemoItem from "./MemoItem";
 
-function MemoList({ memos, onTogglePin, onSelectMemo }) {
+interface MemoListProps {
+  memos: Memo[];
+  onTogglePin: (memoId: number) => void;
+  onSelectMemo: (memo: Memo) => void;
+}
+
+function MemoList({ memos, onTogglePin, onSelectMemo }: MemoListProps) {
   const pinnedMemos = memos.filter((memo) => memo.isPinned);
   const unpinnedMemos = memos.filter((memo) => !memo.isPinned);
 

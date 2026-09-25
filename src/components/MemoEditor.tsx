@@ -1,14 +1,25 @@
 import { useState } from "react";
-import backIcon from "../assets/back.svg";
-import CommonModal from "./CommonModal.jsx";
-import IconButton from "./IconButton.jsx";
-import MemoCategorySelect from "./MemoCategorySelect.jsx";
+import type { FormEvent } from "react";
 
-const EDITOR_CARD_STYLES = {
+import backIcon from "../assets/back.svg";
+import type { Memo, MemoCategory, MemoDraft } from "../types/memo";
+import CommonModal from "./CommonModal";
+import IconButton from "./IconButton";
+import MemoCategorySelect from "./MemoCategorySelect";
+
+const EDITOR_CARD_STYLES: Record<MemoCategory, string> = {
   Daily: "bg-blue-04",
   Work: "bg-blue-06",
   Others: "bg-gray-02",
 };
+
+type ExitModalType = "back" | "cancel" | null;
+
+interface MemoEditorProps {
+  initialMemo?: Memo | null;
+  onCancel: () => void;
+  onSubmit: (memoDraft: MemoDraft) => void;
+}
 
 const getToday = () => {
   const today = new Date();
@@ -19,11 +30,17 @@ const getToday = () => {
   return `${year}.${month}.${day}`;
 };
 
-function MemoEditor({ initialMemo = null, onCancel, onSubmit }) {
+function MemoEditor({
+  initialMemo = null,
+  onCancel,
+  onSubmit,
+}: MemoEditorProps) {
   const [title, setTitle] = useState(initialMemo?.title ?? "");
   const [content, setContent] = useState(initialMemo?.content ?? "");
-  const [category, setCategory] = useState(initialMemo?.category ?? "");
-  const [exitModalType, setExitModalType] = useState(null);
+  const [category, setCategory] = useState<MemoCategory | "">(
+    initialMemo?.category ?? "",
+  );
+  const [exitModalType, setExitModalType] = useState<ExitModalType>(null);
 
   const isEditing = initialMemo !== null;
   const isComplete = Boolean(content.trim() && category);
@@ -40,10 +57,10 @@ function MemoEditor({ initialMemo = null, onCancel, onSubmit }) {
       ? "placeholder:text-gray-01"
       : "placeholder:text-blue-03";
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!isComplete) {
+    if (!content.trim() || !category) {
       return;
     }
 

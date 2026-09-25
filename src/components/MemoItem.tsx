@@ -1,17 +1,26 @@
+import type { MouseEvent } from "react";
+
 import pinActiveIcon from "../assets/pin-active.svg";
 import pinIcon from "../assets/pin.svg";
-import CATEGORY_STYLES from "../constants/categoryStyles.js";
-import IconButton from "./IconButton.jsx";
+import CATEGORY_STYLES from "../constants/categoryStyles";
+import type { Memo } from "../types/memo";
+import IconButton from "./IconButton";
 
-function MemoItem({ memo, onTogglePin, onSelectMemo }) {
+interface MemoItemProps {
+  memo: Memo;
+  onTogglePin: (memoId: number) => void;
+  onSelectMemo: (memo: Memo) => void;
+}
+
+function MemoItem({ memo, onTogglePin, onSelectMemo }: MemoItemProps) {
   const { title, content, category, date, isPinned } = memo;
-  const categoryStyle = CATEGORY_STYLES[category] ?? CATEGORY_STYLES.Others;
+  const categoryStyle = CATEGORY_STYLES[category];
 
   const handleCardClick = () => {
     onSelectMemo(memo);
   };
 
-  const handlePinClick = (event) => {
+  const handlePinClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     onTogglePin(memo.id);
   };

@@ -1,18 +1,28 @@
+import type { ChangeEvent, FormEvent } from "react";
+
 import searchIcon from "../assets/search.svg";
-import IconButton from "./IconButton.jsx";
-import TagFilter from "./TagFilter.jsx";
+import type { FilterCategory } from "../constants/categoryStyles";
+import IconButton from "./IconButton";
+import TagFilter from "./TagFilter";
+
+interface SearchBarProps {
+  selectedCategory: FilterCategory;
+  onSelectCategory: (category: FilterCategory) => void;
+  searchText: string;
+  onSearchTextChange: (searchText: string) => void;
+}
 
 function SearchBar({
   selectedCategory,
   onSelectCategory,
   searchText,
   onSearchTextChange,
-}) {
-  const handleSubmit = (event) => {
+}: SearchBarProps) {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
   };
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     onSearchTextChange(event.target.value);
   };
 

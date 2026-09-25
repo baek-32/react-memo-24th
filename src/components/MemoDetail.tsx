@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
+
 import closeIcon from "../assets/close.svg";
 import deleteIcon from "../assets/delete.svg";
 import editIcon from "../assets/edit.svg";
-import CATEGORY_STYLES from "../constants/categoryStyles.js";
-import CommonModal from "./CommonModal.jsx";
-import IconButton from "./IconButton.jsx";
+import CATEGORY_STYLES from "../constants/categoryStyles";
+import type { Memo } from "../types/memo";
+import CommonModal from "./CommonModal";
+import IconButton from "./IconButton";
 
-function MemoDetail({ memo, onClose, onEdit, onDelete }) {
+interface MemoDetailProps {
+  memo: Memo;
+  onClose: () => void;
+  onEdit: (memo: Memo) => void;
+  onDelete: (memoId: number) => void;
+}
+
+function MemoDetail({ memo, onClose, onEdit, onDelete }: MemoDetailProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const categoryStyle =
-    CATEGORY_STYLES[memo.category] ?? CATEGORY_STYLES.Others;
+  const categoryStyle = CATEGORY_STYLES[memo.category];
 
   useEffect(() => {
-    const handleEscapeKey = (event) => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key !== "Escape") {
         return;
       }
@@ -33,7 +42,7 @@ function MemoDetail({ memo, onClose, onEdit, onDelete }) {
     };
   }, [isDeleteModalOpen, onClose]);
 
-  const handleOverlayClick = (event) => {
+  const handleOverlayClick = (event: ReactMouseEvent<HTMLDivElement>) => {
     if (event.target === event.currentTarget) {
       onClose();
     }

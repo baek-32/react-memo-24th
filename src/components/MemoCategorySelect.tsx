@@ -1,26 +1,43 @@
 import { useEffect, useRef, useState } from "react";
+
 import tagArrowIcon from "../assets/tag-arrow.svg";
-import CATEGORY_STYLES, { CATEGORIES } from "../constants/categoryStyles.js";
+import CATEGORY_STYLES, {
+  CATEGORIES,
+  isMemoCategory,
+} from "../constants/categoryStyles";
+import type { MemoCategory } from "../types/memo";
 
-function MemoCategorySelect({ category, onSelectCategory }) {
+interface MemoCategorySelectProps {
+  category: MemoCategory | "";
+  onSelectCategory: (category: MemoCategory) => void;
+}
+
+function MemoCategorySelect({
+  category,
+  onSelectCategory,
+}: MemoCategorySelectProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const selectRef = useRef(null);
+  const selectRef = useRef<HTMLDivElement>(null);
 
-  const selectableCategories = CATEGORIES.filter((item) => item !== "All");
-  const selectedStyle = category ? CATEGORY_STYLES[category] : null;
+  const selectableCategories = CATEGORIES.filter(isMemoCategory);
+  const selectedStyle = CATEGORY_STYLES[category || "All"];
 
   useEffect(() => {
     if (!isOpen) {
       return undefined;
     }
 
-    const handleOutsideClick = (event) => {
-      if (selectRef.current && !selectRef.current.contains(event.target)) {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (
+        event.target instanceof Node &&
+        selectRef.current &&
+        !selectRef.current.contains(event.target)
+      ) {
         setIsOpen(false);
       }
     };
 
-    const handleEscapeKey = (event) => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setIsOpen(false);
       }
@@ -35,7 +52,7 @@ function MemoCategorySelect({ category, onSelectCategory }) {
     };
   }, [isOpen]);
 
-  const handleSelect = (selectedCategory) => {
+  const handleSelect = (selectedCategory: MemoCategory) => {
     onSelectCategory(selectedCategory);
     setIsOpen(false);
   };

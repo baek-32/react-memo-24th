@@ -1,37 +1,31 @@
-import { useEffect, useState } from "react";
-import CommonModal from "./components/CommonModal.jsx";
-import EmptyState from "./components/EmptyState.jsx";
-import Header from "./components/Header.jsx";
-import MemoDetail from "./components/MemoDetail.jsx";
-import MemoEditor from "./components/MemoEditor.jsx";
-import MemoList from "./components/MemoList.jsx";
-import NoResultsState from "./components/NoResultsState.jsx";
+import { useState } from "react";
 
-const MEMOS_STORAGE_KEY = "memos";
-
-const loadMemos = () => {
-  try {
-    const savedMemos = localStorage.getItem(MEMOS_STORAGE_KEY);
-
-    return savedMemos ? JSON.parse(savedMemos) : [];
-  } catch {
-    localStorage.removeItem(MEMOS_STORAGE_KEY);
-    return [];
-  }
-};
+import CommonModal from "./components/CommonModal";
+import EmptyState from "./components/EmptyState";
+import Header from "./components/Header";
+import MemoDetail from "./components/MemoDetail";
+import MemoEditor from "./components/MemoEditor";
+import MemoList from "./components/MemoList";
+import NoResultsState from "./components/NoResultsState";
+import {
+  type FilterCategory,
+} from "./constants/categoryStyles";
+import { useMemoStore } from "./stores/useMemoStore";
+import type { Memo, MemoDraft } from "./types/memo";
 
 function App() {
-  const [memos, setMemos] = useState(loadMemos);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const memos = useMemoStore((state) => state.memos);
+  const addMemo = useMemoStore((state) => state.addMemo);
+  const updateMemo = useMemoStore((state) => state.updateMemo);
+  const deleteMemo = useMemoStore((state) => state.deleteMemo);
+  const togglePin = useMemoStore((state) => state.togglePin);
+  const [selectedCategory, setSelectedCategory] =
+    useState<FilterCategory>("All");
   const [searchText, setSearchText] = useState("");
-  const [selectedMemo, setSelectedMemo] = useState(null);
+  const [selectedMemo, setSelectedMemo] = useState<Memo | null>(null);
   const [isAddingMemo, setIsAddingMemo] = useState(false);
-  const [editingMemo, setEditingMemo] = useState(null);
+  const [editingMemo, setEditingMemo] = useState<Memo | null>(null);
   const [isAddCompleteModalOpen, setIsAddCompleteModalOpen] = useState(false);
-
-  useEffect(() => {
-    localStorage.setItem(MEMOS_STORAGE_KEY, JSON.stringify(memos));
-  }, [memos]);
 
   const hasMemos = memos.length > 0;
   const keyword = searchText.trim().toLowerCase();
@@ -49,23 +43,19 @@ function App() {
 
   const hasVisibleMemos = visibleMemos.length > 0;
 
-  const handleTogglePin = (memoId) => {
-    setMemos((currentMemos) =>
-      currentMemos.map((memo) =>
-        memo.id === memoId ? { ...memo, isPinned: !memo.isPinned } : memo,
-      ),
-    );
+  const handleTogglePin = (memoId: number) => {
+    togglePin(memoId);
   };
 
-  const handleSelectCategory = (category) => {
+  const handleSelectCategory = (category: FilterCategory) => {
     setSelectedCategory(category);
   };
 
-  const handleSearchTextChange = (value) => {
+  const handleSearchTextChange = (value: string) => {
     setSearchText(value);
   };
 
-  const handleSelectMemo = (memo) => {
+  const handleSelectMemo = (memo: Memo) => {
     setSelectedMemo(memo);
   };
 
@@ -73,18 +63,8 @@ function App() {
     setSelectedMemo(null);
   };
 
-  const handleAddMemo = (memoDraft) => {
-    const nextId =
-      memos.reduce(
-        (largestId, memo) => Math.max(largestId, Number(memo.id)),
-        0,
-      ) + 1;
-
-    setMemos((currentMemos) => [
-      { ...memoDraft, id: nextId, isPinned: false },
-      ...currentMemos,
-    ]);
-
+  const handleAddMemo = (memoDraft: MemoDraft) => {
+    addMemo(memoDraft);
     setIsAddingMemo(false);
     setIsAddCompleteModalOpen(true);
   };
@@ -93,26 +73,22 @@ function App() {
     setIsAddCompleteModalOpen(false);
   };
 
-  const handleStartEdit = (memo) => {
+  const handleStartEdit = (memo: Memo) => {
     setSelectedMemo(null);
     setEditingMemo(memo);
   };
 
-  const handleUpdateMemo = (memoDraft) => {
-    setMemos((currentMemos) =>
-      currentMemos.map((memo) =>
-        memo.id === editingMemo.id ? { ...memo, ...memoDraft } : memo,
-      ),
-    );
+  const handleUpdateMemo = (memoDraft: MemoDraft) => {
+    if (!editingMemo) {
+      return;
+    }
 
+    updateMemo(editingMemo.id, memoDraft);
     setEditingMemo(null);
   };
 
-  const handleDeleteMemo = (memoId) => {
-    setMemos((currentMemos) =>
-      currentMemos.filter((memo) => memo.id !== memoId),
-    );
-
+  const handleDeleteMemo = (memoId: number) => {
+    deleteMemo(memoId);
     setSelectedMemo(null);
   };
 
