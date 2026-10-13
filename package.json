@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
+    "test:demo": "node --test tests/demo-mode.test.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "preview": "vite preview"

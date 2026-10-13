@@ -7,7 +7,7 @@ import type { Memo, MemoDraft } from "../types/memo";
 const LEGACY_MEMOS_STORAGE_KEY = "memos";
 const MEMO_STORE_STORAGE_KEY = "memo-store";
 
-interface MemoStore {
+export interface MemoStore {
   memos: Memo[];
   addMemo: (memoDraft: MemoDraft) => void;
   updateMemo: (memoId: number, memoDraft: MemoDraft) => void;
@@ -84,9 +84,7 @@ export const useMemoStore = create<MemoStore>()(
       togglePin: (memoId) =>
         set((state) => ({
           memos: state.memos.map((memo) =>
-            memo.id === memoId
-              ? { ...memo, isPinned: !memo.isPinned }
-              : memo,
+            memo.id === memoId ? { ...memo, isPinned: !memo.isPinned } : memo,
           ),
         })),
     }),

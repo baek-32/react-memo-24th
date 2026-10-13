@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import App from "../App";
+import DemoPage from "../pages/DemoPage";
 import LoginPage from "../pages/LoginPage";
 import SignupPage from "../pages/SignupPage";
 import ProtectedRoute from "./ProtectedRoute";
@@ -9,6 +10,7 @@ import PublicRoute from "./PublicRoute";
 function AppRouter() {
   return (
     <Routes>
+      <Route path="/demo" element={<DemoPage />} />
       <Route
         path="/"
         element={

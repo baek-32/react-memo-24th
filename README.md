@@ -118,3 +118,38 @@ npm run typecheck
 npm run lint
 npm run build
 ```
+
+## 백엔드 없이 데모 체험하기
+
+로그인 화면에서 **데모로 체험하기**를 누르면 `/demo`로 이동합니다. 상단의 **DEMO MODE** 표시와 **데모 종료** 버튼으로 현재 모드를 확인하고 로그인 화면으로 돌아갈 수 있습니다.
+
+- Daily, Work, Others 예시 메모 6개가 처음 진입할 때 생성됩니다.
+- 작성·수정·삭제·고정·검색·카테고리 필터·상세보기는 기존 메모 UI를 사용합니다.
+- 데모 메모는 localStorage의 `react-memo-demo-memos-v1`에 저장됩니다. 새로고침과 데모 종료 후 재진입에도 유지됩니다. 모두 삭제하면 빈 상태가 유지됩니다.
+- 데모 진입 상태는 sessionStorage의 `react-memo-demo-session-v1`에 저장됩니다. 새로고침에는 유지되고, 데모 종료 시 제거됩니다. 새 세션에서는 로그인 화면의 버튼으로 다시 진입합니다.
+- 실제 인증의 `auth-storage`, 기존 메모의 `memo-store` 및 레거시 `memos` 키는 수정하지 않습니다. 데모 상태는 서버 토큰을 생성하거나 `/memos`의 인증 검사를 통과시키지 않습니다.
+- 데모에는 API 서버나 `VITE_API_BASE_URL` 설정이 필요하지 않습니다. 일반 로그인·회원가입은 계속 기존 API를 사용합니다.
+- 데모 데이터는 같은 브라우저와 같은 사이트 주소에서만 유지됩니다. 로컬, Preview, Production 주소 사이에서는 공유되지 않습니다.
+
+현재 브랜치의 메모 CRUD는 원래부터 Zustand/localStorage 기반이며, 메모 CRUD API 함수는 존재하지 않습니다. 기존 인증 API와 일반 메모 저장 방식은 보존했습니다.
+
+자동 검증은 기존 Node.js와 Vite만 사용합니다. 추가 라이브러리는 필요하지 않습니다.
+
+```bash
+npm run test:demo
+```
+
+구조 분석, 변경 파일, 검증 범위와 수동 확인 절차는 [데모 모드 작업 보고서](docs/demo-mode.md)를 참고하세요.
+
+## Vercel Preview 배포
+
+변경사항 검토 후 데모 브랜치만 배포하는 절차입니다. Production 브랜치에 merge하거나 Production으로 승격하지 않으면 기존 서비스와 별도로 Preview를 확인할 수 있습니다.
+
+1. `git diff`와 `git status`로 `feat/demo-mode` 변경사항을 확인하고 커밋합니다.
+2. `git push -u origin feat/demo-mode`로 해당 브랜치만 올립니다.
+3. Git 저장소가 Vercel 프로젝트에 연결되어 있고 이 브랜치가 Production 브랜치가 아니라면 Preview 배포가 자동 생성됩니다. Vercel Deployments에서 Preview URL을 확인합니다.
+4. Preview의 `/login`에서 **데모로 체험하기**를 누릅니다. 일반 인증도 테스트하려면 Preview 환경에 기존 `VITE_API_BASE_URL`을 설정해야 하며, 실제 백엔드 서버가 응답해야 합니다.
+
+기존 `vercel.json`의 SPA rewrite가 `/demo` 새로고침도 처리하므로 배포 설정 변경은 필요하지 않습니다. 포트폴리오 링크를 공유하기 전에는 방문자가 해당 Preview URL에 접근 가능한지도 확인하세요.
+
+참고: [Vercel 배포 환경](https://vercel.com/docs/deployments/environments), [환경 변수](https://vercel.com/docs/environment-variables).

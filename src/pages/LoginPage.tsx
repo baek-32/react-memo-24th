@@ -8,20 +8,32 @@ import AuthButton from "../components/auth/AuthButton";
 import AuthTextField from "../components/auth/AuthTextField";
 import CommonModal from "../components/CommonModal";
 import { useAuthStore } from "../stores/useAuthStore";
+import { useDemoSessionStore } from "../stores/useDemoSessionStore";
 
 function LoginPage() {
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
+  const startDemo = useDemoSessionStore((state) => state.startDemo);
+  const [demoError, setDemoError] = useState<string | null>(null);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isNetworkErrorModalOpen, setIsNetworkErrorModalOpen] =
-    useState(false);
+  const [isNetworkErrorModalOpen, setIsNetworkErrorModalOpen] = useState(false);
 
-  const canSubmit =
-    email.trim() !== "" && password !== "" && !isSubmitting;
+  const canSubmit = email.trim() !== "" && password !== "" && !isSubmitting;
+
+  const handleStartDemo = () => {
+    try {
+      startDemo();
+      navigate("/demo", { replace: true });
+    } catch (error) {
+      setDemoError(
+        error instanceof Error ? error.message : "데모를 시작하지 못했습니다.",
+      );
+    }
+  };
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
@@ -104,6 +116,15 @@ function LoginPage() {
               {isSubmitting ? "로그인 중..." : "로그인"}
             </AuthButton>
 
+            <button
+              type="button"
+              className="h-14 w-full rounded-xl border border-blue-05 bg-white-00 px-5 text-action-medium font-extrabold text-blue-05 hover:bg-blue-02 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-05 disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={isSubmitting}
+              onClick={handleStartDemo}
+            >
+              데모로 체험하기
+            </button>
+
             <nav
               className="flex items-center justify-center gap-8 text-body-small font-regular text-gray-03"
               aria-label="계정 도움말"
@@ -123,6 +144,13 @@ function LoginPage() {
           title="로그인에 실패했습니다"
           message="네트워크 연결 상태를 확인한 뒤 다시 시도해주세요."
           onConfirm={() => setIsNetworkErrorModalOpen(false)}
+        />
+      )}
+      {demoError && (
+        <CommonModal
+          title="데모를 시작하지 못했습니다"
+          message={demoError}
+          onConfirm={() => setDemoError(null)}
         />
       )}
     </>
